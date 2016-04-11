@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html ng-app='exampleApp'>
+
+<head>
+<link rel="stylesheet" href="example.css">
+<title>Employee Form</title>
+</head>
+<script type='text/javascript' src='angular.min.js' ></script>
+
+<script>
+angular.module("exampleApp",[]);
+
+angular.module("exampleApp").directive("showLink",
+function() {
+				return {
+					restrict : 'E',
+					scope : {
+						model : '='
+					},
+					template : "<button class='buttonStyle' ng-click='showAlert()'>Show Alert</button>",
+					controller : function($scope) {
+						$scope.showAlert = function() {
+							alert($scope.model.firstName + " " + $scope.model.lastName);
+						}
+					}
+				}
+			}
+);
+angular.module("exampleApp").controller("exampleCtrl", ['$scope',function($scope) {
+
+$scope.employeeList = [];
+$scope.employeeList.push({firstName:"David",lastName:"Gurney"});
+$scope.employeeList.push({firstName:"Steve",lastName:"Green"});
+$scope.employeeList.push({firstName:"Matt",lastName:"Wheeler"});
+
+$scope.buttonFunction = "Add";
+
+$scope.editEmployee=function(index) {
+  $scope.firstName = $scope.employeeList[index].firstName;
+  $scope.lastName = $scope.employeeList[index].lastName;
+  $scope.editIndex = index;
+  $scope.buttonFunction = "Update";
+}
+
+$scope.deleteEmployee=function(index) {
+  if (index <= $scope.employeeList.length) {
+    $scope.employeeList.splice(index,1);
+  }
+}
+
+$scope.showAlert=function(index) {
+}
+
+$scope.processButton = function() {
+
+	if ($scope.buttonFunction == "Add") {
+	  $scope.employeeList.push({firstName:$scope.firstName,lastName:$scope.lastName});
+	  $scope.firstName = '';
+	  $scope.lastName = '';
+	} else if ($scope.buttonFunction == "Update") {
+	  $scope.employeeList[$scope.editIndex].firstName = $scope.firstName;
+	  $scope.employeeList[$scope.editIndex].lastName = $scope.lastName;
+	  $scope.firstName = '';
+	  $scope.lastName = '';
+	  $scope.buttonFunction = 'Add';
+	  
+	}
+}
+
+$scope.cancelEdit = function() {
+	  $scope.firstName = '';
+	  $scope.lastName = '';
+	  $scope.buttonFunction = 'Add';
+
+}
+
+$scope.removeAllEmployees = function() {
+
+	$scope.employeeList = [];
+}
+}]);
+</script>
+
+<body ng-controller='exampleCtrl'>
+
+<h1>Use the form below to enter names</h1>
+
+<span class="firstName" >First Name </span><input type="text" ng-model='firstName' >
+<span class="lastName">Last Name </span><input type="text" ng-model='lastName' >
+<button ng-click="processButton()" class='buttonStyle'>{{buttonFunction}}</button>
+<button ng-click="cancelEdit()" ng-if='buttonFunction=="Update"' class='buttonStyle'>Cancel Edit</button>
+
+<h2>Employee List</h2>
+
+<div ng-repeat='employee in employeeList'>
+<a href='#' ng-click="editEmployee($index)" >{{employee.firstName}} {{employee.lastName}}</a>
+<button class='buttonStyle' ng-click="deleteEmployee($index)">Delete</button>
+<show-link model=employee />
+</div>
+
+<hr/>
+<button class='buttonStyle' ng-click="removeAllEmployees()">Remove All</button>
+
+
+</body>
+
+</html>

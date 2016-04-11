@@ -1,0 +1,16 @@
+.firstName {
+  color: blue;
+  margin-left:10px;
+  margin-right:10px;
+}
+
+.lastName {
+  color:red;
+  margin-left:10px;
+  margin-right:10px;
+}
+
+.buttonStyle {
+	background-color:green;
+	color:white;
+}
